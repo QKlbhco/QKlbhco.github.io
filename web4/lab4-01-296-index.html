@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字展销平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+            font-size: 14px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #f9fafb;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            width: 100%;
+            background: #fff;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 14px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e63946;
+            letter-spacing: 1px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #555;
+            margin: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 15px;
+            transition: all 0.25s ease;
+        }
+
+        .nav a:hover {
+            color: #e63946;
+            transform: translateY(-1px);
+        }
+
+        .icon {
+            display: inline-block;
+            transition: transform 0.4s ease;
+        }
+
+        .nav a:hover .icon {
+            transform: rotate(360deg);
+        }
+
+        .login-btn {
+            padding: 6px 16px;
+            background: #e63946;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            box-shadow: 0 2px 6px rgba(230, 57, 70, 0.2);
+        }
+
+
+        .login-btn:hover {
+            transform: scale(1.05);  
+            background: #c92b37; 
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+        }
+        
+
+        .container {
+            width: 1100px;
+            margin: 30px auto;
+            display: flex;
+            gap: 20px;
+        }
+        .left-col {
+            width: 140px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .left-col h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-list li {
+            margin: 10px 0;
+        }
+
+        .category-list a {
+            text-decoration: none;
+            color: #666;
+            transition: all 0.2s ease;
+            display: block;
+            padding: 4px 0;
+        }
+
+        .category-list a:hover {
+            color: #e63946;
+            padding-left: 6px;
+            font-weight: 500;
+        }
+        .middle-col {
+            flex: 1;
+        }
+        .carousel {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .carousel-inner {
+            width: 100%;
+            height: 600px;
+            animation: slideUp 9s infinite ease-in-out;
+        }
+
+        .carousel-item {
+            width: 100%;
+            height: 200px;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes slideUp {
+            0% { transform: translateY(0); }
+            33% { transform: translateY(-200px); }
+            66% { transform: translateY(-400px); }
+            100% { transform: translateY(0); }
+        }
+
+
+        .hot-recommend h3 {
+            font-size: 17px;
+            color: #333;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hot-recommend h3::before {
+            content: "";
+            width: 4px;
+            height: 18px;
+            background: #e63946;
+            border-radius: 2px;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .book-item {
+            text-align: center;
+            padding: 12px;
+            background: #fff;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .book-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .book-item img {
+            width: 100px;
+            height: 140px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+        .book-item img:hover {
+            transform: translateX(6px) scale(1.08);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+        }
+        .book-item p {
+            color: #333;
+            margin: 4px 0;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .book-item span {
+            color: #e63946;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .new-books {
+            margin-top: 30px;
+        }
+
+        .new-books h3 {
+            font-size: 17px;
+            color: #e63946;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .new-books h3::before {
+            content: "";
+            width: 4px;
+            height: 18px;
+            background: #e63946;
+            border-radius: 2px;
+        }
+
+        .new-books table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .new-books th,
+        .new-books td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #f2f2f2;
+        }
+
+        .new-books th {
+            background: #fafafa;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .right-col {
+            width: 200px;
+        }
+
+        .promo-item {
+            background: #fff;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .promo-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
+        }
+
+        .promo-item img {
+            width: 100px;
+            height: 140px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+
+        }
+
+        .promo-item p {
+            color: #444;
+            font-weight: 500;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.4;
+
+        }
+
+        .modal-box {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            backdrop-filter: blur(2px);
+        }
+
+        .login-modal {
+            position: relative;
+            width: 380px;
+            background: #fff;
+            padding: 35px 30px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            animation: modalShow 0.3s ease;
+        }
+
+        @keyframes modalShow {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 22px;
+            cursor: pointer;
+            color: #888;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #e63946;
+        }
+
+        .modal-title {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-item {
+            margin-bottom: 20px;
+        }
+
+        .form-item label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-item input {
+            width: 100%;
+            height: 40px;
+            padding: 0 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .form-item input:focus {
+            border-color: #e63946;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .submit-btn,
+        .reg-btn {
+            flex: 1;
+            height: 42px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.25s ease;
+        }
+
+        .submit-btn {
+            background: #e63946;
+            color: #fff;
+        }
+
+        .submit-btn:hover {
+            background: #d02d3a;
+        }
+
+        .reg-btn {
+            background: #666;
+            color: #fff;
+        }
+
+        .reg-btn:hover {
+            background: #555;
+        }
+
+        .tip {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="nav-wrap">
+            <div class="logo">数字展销平台</div>
+            <div class="nav">
+                <a href="#"><span class="icon">🏠</span>首页</a>
+                <a href="#"><span class="icon">📖</span>产品展示</a>
+                <a href="#"><span class="icon">📚</span>图书分类</a>
+                <a href="#"><span class="icon">🆕</span>新品上市</a>
+                <a href="#"><span class="icon">ℹ️</span>关于我们</a>
+                <a href="#"><span class="icon">📞</span>联系我们</a>
+            </div>
+        </div>
+        <button class="login-btn" id="openLogin">登录</button>
+    </div>
+
+    <div class="container">
+        <div class="left-col">
+            <h3>图书分类</h3>
+            <ul class="category-list">
+                <li><a href="#">教育</a></li>
+                <li><a href="#">儿童</a></li>
+                <li><a href="#">史实</a></li>
+                <li><a href="#">科幻</a></li>
+            </ul>
+        </div>
+
+        <div class="middle-col">
+            <div class="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item">
+                        <img src="../web4/image/fuemosi.jpg" alt="轮播1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="../web4/image/maoze.png" alt="轮播2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="../web4/image/1000.webp" alt="轮播3">
+                    </div>
+                </div>
+            </div>
+
+            <div class="hot-recommend">
+                <h3>热门推荐</h3>
+                <div class="book-grid">
+                    <div class="book-item">
+                        <img src="../web4/image/jianlai.jpeg" alt="剑来">
+                        <p>剑来</p>
+                        <span>¥48</span>
+                    </div>
+                    <div class="book-item">
+                        <img src="../web4/image/doupo.png" alt="斗破苍穹">
+                        <p>斗破苍穹</p>
+                        <span>¥66</span>
+                    </div>
+                    <div class="book-item">
+                        <img src="../web4/image/u=21882797,453295103&fm=253&fmt=auto&app=138&f=JPEG.webp" alt="蛤蟆医生">
+                        <p>蛤蟆医生</p>
+                        <span>¥77</span>
+                    </div>
+                    <div class="book-item">
+                        <img src="../web4/image/6d81800a19d8bc3eb1350fb3daddb11ea8d3fd1fef36.jpg" alt="三体">
+                        <p>三体</p>
+                        <span>¥99</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="new-books">
+                <h3>新书上市</h3>
+                <table>
+                    <tr>
+                        <th>书名</th>
+                        <th>作者</th>
+                        <th>价格</th>
+                    </tr>
+                    <tr>
+                        <td>窄门</td>
+                        <td>安德烈</td>
+                        <td>¥36.66</td>
+                    </tr>
+                    <tr>
+                        <td>被讨厌的勇气</td>
+                        <td>岸建一郎</td>
+                        <td>¥66.66</td>
+                    </tr>
+                    <tr>
+                        <td>龙猫国</td>
+                        <td>龙君晓初</td>
+                        <td>¥88.88</td>
+                    </tr>
+                    <tr>
+                        <td>斗罗大陆</td>
+                        <td>唐家三少</td>
+                        <td>¥99.99</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="right-col">
+            <div class="promo-item">
+                <img src="../web4/image/0324.jpg" alt="满减活动">
+                <p>全场图书满66减20！</p>
+            </div>
+            <div class="promo-item">
+                <img src="../web4/image/xijn.webp" alt="新书首发">
+                <p>第二本半价优惠</p>
+            </div>
+            <div class="promo-item">
+                <img src="../web4/image/huiyuan.jpeg" alt="会员优惠">
+                <p>会员专享9折福利</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-box" id="loginModal">
+        <div class="login-modal">
+            <span class="close-btn" id="closeBtn">×</span>
+            <h3 class="modal-title">用户登录 / 注册</h3>
+            <div class="form-item">
+                <label>用户名</label>
+                <input type="text" id="username" placeholder="请输入用户名">
+            </div>
+            <div class="form-item">
+                <label>密码</label>
+                <input type="password" id="password" placeholder="请输入密码">
+            </div>
+            <div class="btn-group">
+                <button class="submit-btn" id="loginBtn">登录</button>
+                <button class="reg-btn" id="regBtn">注册</button>
+            </div>
+            <div class="tip" id="tip"></div>
+        </div>
+    </div>
+
+    <script>
+        const openLogin = document.getElementById('openLogin');
+        const loginModal = document.getElementById('loginModal');
+        const closeBtn = document.getElementById('closeBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        const regBtn = document.getElementById('regBtn');
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        const tip = document.getElementById('tip');
+
+        openLogin.onclick = function(){
+            loginModal.style.display = 'flex';
+            tip.innerHTML = '';
+            username.value = '';
+            password.value = '';
+        }
+
+        closeBtn.onclick = function(){
+            loginModal.style.display = 'none';
+        }
+
+        loginModal.onclick = function(e){
+            if(e.target === loginModal){
+                loginModal.style.display = 'none';
+            }
+        }
+
+        regBtn.onclick = function(){
+            let user = username.value.trim();
+            let pwd = password.value.trim();
+
+            if(!user || !pwd){
+                tip.innerHTML = '用户名和密码不能为空！';
+                tip.style.color = '#e63946';
+                return;
+            }
+
+            let userList = JSON.parse(localStorage.getItem('userList')) || [];
+            let hasUser = userList.some(item => item.username === user);
+            if(hasUser){
+                tip.innerHTML = '该用户名已被注册！';
+                tip.style.color = '#e63946';
+                return;
+            }
+
+            userList.push({username: user, password: pwd});
+            localStorage.setItem('userList', JSON.stringify(userList));
+            tip.innerHTML = '注册成功！请登录';
+            tip.style.color = 'green';
+        }
+
+        loginBtn.onclick = function(){
+            let user = username.value.trim();
+            let pwd = password.value.trim();
+
+            if(!user || !pwd){
+                tip.innerHTML = '用户名和密码不能为空！';
+                tip.style.color = '#e63946';
+                return;
+            }
+
+            let userList = JSON.parse(localStorage.getItem('userList')) || [];
+            let findUser = userList.find(item => item.username === user && password === pwd);
+
+            if(findUser){
+                tip.innerHTML = '登录成功！';
+                tip.style.color = 'green';
+                setTimeout(()=>{
+                    loginModal.style.display = 'none';
+                    openLogin.innerHTML = `欢迎：${user}`;
+                    openLogin.disabled = true;
+                    openLogin.style.background = '#666';
+                },800);
+            }else{
+                tip.innerHTML = '用户名或密码错误！';
+                tip.style.color = '#e63946';
+            }
+        }
+    </script>
+</body>
+</html>
